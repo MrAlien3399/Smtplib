@@ -1,0 +1,6 @@
+Hello! This is Python Data Science Project.
+My name is Josh.
+I'm glad to meet you.
+Hope you enjoy!
+
+
