@@ -26,6 +26,7 @@ class SendMail(MailServer):
         self.attachment = attachment
 
     def email_container(self,toaddr):
+        
         message = MIMEMultipart()
         message["Subject"] = "Github Project"
         message["From"] = "zigz5638@gmail.com"
@@ -64,7 +65,7 @@ class SendMail(MailServer):
     def send_email(self,fromaddr,toaddr,userdata):
         try:
             for to in toaddr.split(','):
-                ready2Send = SendMail.email_container(self,toaddr).as_string()
+                ready2Send = SendMail.email_container(self,to).as_string()
                 print(f"Sending to {to}")
                 SendMail.connect_to_smtp_server(self,userdata).sendmail(fromaddr,to,ready2Send)
                 print(f"Successfully sent to {to} \n")
