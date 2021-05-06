@@ -25,11 +25,11 @@ class SendMail(MailServer):
         self.text_msg = text_msg
         self.attachment = attachment
 
-    def email_container(self):
+    def email_container(self,toaddr):
         message = MIMEMultipart()
         message["Subject"] = "Github Project"
         message["From"] = "zigz5638@gmail.com"
-        message["To"] = "zigz3883@gmail.com"
+        message["To"] = toaddr
         
         if self.text_msg:
             
@@ -41,27 +41,30 @@ class SendMail(MailServer):
             print("No message provided-Only attachment")
             print("------------------------------------ \n")
         
-        if self.attachment:
+        
+        for attach in self.attachment.split(','):
             
-            with open(self.attachment,'rb') as file:
-                part = MIMEBase('application','octet-stream')
-                part.set_payload(file.read())
-                encoders.encode_base64(part)
-                part.add_header(
-                    "Content-Disposition",
-                    f"attachment; filename={self.attachment}"
-                )
-                message.attach(part)
-        else:
-            print("No attachment Provided-Only Mail letter")
-            print("------------------------------------\n")
+            if attach:
+            
+                with open(attach,'rb') as file:
+                    part = MIMEBase('application','octet-stream')
+                    part.set_payload(file.read())
+                    encoders.encode_base64(part)
+                    part.add_header(
+                        "Content-Disposition",
+                        f"attachment; filename={attach}"
+                    )
+                    message.attach(part)
+            else:
+                print("No attachment Provided-Only Mail letter")
+                print("------------------------------------\n")
         
         return message
 
     def send_email(self,fromaddr,toaddr,userdata):
         try:
-            ready2Send = SendMail.email_container(self).as_string()
             for to in toaddr.split(','):
+                ready2Send = SendMail.email_container(self,toaddr).as_string()
                 print(f"Sending to {to}")
                 SendMail.connect_to_smtp_server(self,userdata).sendmail(fromaddr,to,ready2Send)
                 print(f"Successfully sent to {to} \n")
