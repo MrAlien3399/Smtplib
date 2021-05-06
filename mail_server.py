@@ -20,7 +20,7 @@ class MailServer:
 
 class SendMail(MailServer):
 
-    def __init__(self,server,port,text_msg=None,attachment=None):
+    def __init__(self,server,port,text_msg="",attachment=""):
         MailServer.__init__(self,server,port)
         self.text_msg = text_msg
         self.attachment = attachment
@@ -67,8 +67,11 @@ class SendMail(MailServer):
             for to in toaddr.split(','):
                 ready2Send = SendMail.email_container(self,to).as_string()
                 print(f"Sending to {to}")
-                SendMail.connect_to_smtp_server(self,userdata).sendmail(fromaddr,to,ready2Send)
-                print(f"Successfully sent to {to} \n")
+                if self.text_msg or self.attachment:
+                    SendMail.connect_to_smtp_server(self,userdata).sendmail(fromaddr,to,ready2Send)
+                    print(f"Successfully sent to {to} \n")
+                else:
+                    print("No message and attachment provided!!!\n")
         except:
             print("Something went wrong!!!")
         finally:
